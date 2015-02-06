@@ -13,6 +13,7 @@
 
 <form id="form" action="index.php" method="post" onchange="this.submit()">
     <select name="mpc" style="width:100%;">
+        <option>Choose…</option>
         <?php
             // list available streams
             foreach ($lsdi as $stream) {
