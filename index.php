@@ -1,14 +1,25 @@
 <?php
 
-
 if ( isset($_POST['mpc']) ) {
-    echo '<pre>';var_dump($_POST['mpc']);echo '</pre>';
-    shell_exec('mpc clear && mpc load streams/di.fm/'.$_POST['mpc'].'.m3u && mpc play');
+
+    $post = escapeshellarg($_POST['mpc']);
+
+    echo '<pre>';var_dump($post);echo '</pre>';
+    shell_exec('mpc clear && mpc load streams/di.fm/'.$post.' && mpc play');
+
 }
+
+$lsdi = explode( "\n", shell_exec('ls -1 /mnt/crypt/musik/streams/di.fm/') );
 
 ?>
 
 <form action="index.php" method="post">
-<input type="text" id="mpc" name="mpc" value="">
+<select name="mpc">
+    <?php
+        foreach ($lsdi as $stream) {
+            echo '<option value="'.$stream.'">'.$stream.'</option>';
+        }
+    ?>
+</select>
 <input type="submit" value="send">
 </form>
