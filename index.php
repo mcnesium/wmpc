@@ -3,19 +3,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>WMPC</title>
-<?php
-
-if ( isset($_POST['mpc']) ) {
-
-    // escape post variable
-    $post = escapeshellarg($_POST['mpc']);
-
-    // execute shell command to play the selected stream
-    shell_exec('mpc clear && mpc load streams/di.fm/'.$post.' && mpc play');
-
-}
-
-?>
 
 <?php
 
@@ -34,3 +21,29 @@ if ( isset($_POST['mpc']) ) {
         ?>
     </select>
 </form>
+
+<?php
+
+if ( isset($_POST['mpc']) ) {
+
+    // escape post variable
+    $post = escapeshellarg($_POST['mpc']);
+
+    // execute shell command to play the selected stream
+    shell_exec('mpc clear && mpc load streams/di.fm/'.$post.' && mpc play');
+
+    ?>
+    <script type="text/javascript">
+        (function(){
+            // preselect former selected stream after page has reloaded
+            var option = document.querySelector('select[name="mpc"] option[value="'+<?php echo $post; ?>+'"]');
+            if(option){
+                option.selected = true;
+            }
+        })();
+    </script>
+    <?php
+
+}
+
+?>
