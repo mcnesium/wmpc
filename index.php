@@ -24,7 +24,7 @@ if ( isset($_POST['mpc']) ) {
 
 ?>
 
-<form action="index.php" method="post">
+<form id="form" action="index.php" method="post" onchange="this.submit()">
     <select name="mpc">
         <?php
             // list available streams
@@ -33,5 +33,4 @@ if ( isset($_POST['mpc']) ) {
             }
         ?>
     </select>
-    <input type="submit" value="send">
 </form>
