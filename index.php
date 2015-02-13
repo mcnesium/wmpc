@@ -6,45 +6,55 @@
 
 <?php
 
-    // get available streams
-    $lsdi = explode( "\n", shell_exec('ls -1 /mnt/crypt/musik/streams/di.fm/') );
+    $streamnames = array(
+        'di.fm',
+        'radiotunes.com',
+        'jazzradio.com',
+        'rockradio.com'
+    );
+
+    // put available stream playlist files in array
+    foreach ($streamnames as $streamname) {
+        $ls[$streamname] = explode( "\n", shell_exec("ls -1 /mnt/crypt/musik/streams/".$streamname ) );
+    }
 
 ?>
 
+
 <form id="form" action="index.php" method="post" onchange="this.submit()">
-    <select name="mpc" style="width:100%;">
-        <option>Choose…</option>
+    <?php foreach ($streamnames as $streamname) : ?>
+        <select name="<?php echo $streamname ?>" style="width:100%;height:30px;margin-bottom: 20px;">
+        <option value=""><?php echo $streamname ?></option>
         <?php
-            // list available streams
-            foreach ($lsdi as $stream) {
-                echo '<option value="'.$stream.'">'.$stream.'</option>';
+            // add option for each playlistfile
+            foreach ($ls[$streamname] as $playlist) {
+                echo '<option value="'.$playlist.'">'.$playlist.'</option>';
             }
         ?>
-    </select>
+        </select>
+    <?php endforeach; ?>
 </form>
+
 
 <?php
 
-if ( isset($_POST['mpc']) ) {
+if ( isset($_POST) ) {
 
-    // escape post variable
-    $post = escapeshellarg($_POST['mpc']);
+    foreach ($_POST as $postvar => $value) {
 
-    // execute shell command to play the selected stream
-    shell_exec('mpc clear && mpc load streams/di.fm/'.$post.' && mpc play');
+        if ($value != '') {
+            // execute shell command to play the selected stream
+            shell_exec('mpc clear && mpc load streams/'.str_replace('_','.',escapeshellarg($postvar)).'/'.escapeshellarg($value).' && mpc play');
 
-    ?>
-    <script type="text/javascript">
-        (function(){
-            // preselect former selected stream after page has reloaded
-            var option = document.querySelector('select[name="mpc"] option[value="'+<?php echo $post; ?>+'"]');
-            if(option){
-                option.selected = true;
-            }
-        })();
-    </script>
-    <?php
+            break;
+        }
+    }
 
 }
 
 ?>
+
+<dl>
+    <dt>now playing</dt>
+    <dd><?php echo shell_exec('/usr/bin/mpc current 2>&1'); ?></dd>
+</dl>
