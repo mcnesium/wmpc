@@ -33,6 +33,7 @@
         ?>
         </select>
     <?php endforeach; ?>
+    <button name="stop" value="stop">Stop</button>
 </form>
 
 
@@ -42,7 +43,10 @@ if ( isset($_POST) ) {
 
     foreach ($_POST as $postvar => $value) {
 
-        if ($value != '') {
+        if ($value == 'stop') {
+            shell_exec('mpc stop');
+        }
+        else if ($value != '') {
             // execute shell command to play the selected stream
             shell_exec('mpc clear && mpc load streams/'.str_replace('_','.',escapeshellarg($postvar)).'/'.escapeshellarg($value).' && mpc play');
 
