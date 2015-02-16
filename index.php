@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
 <title>WMPC</title>
 
 <?php
@@ -39,8 +38,6 @@
 
 <?php
 
-if ( isset($_POST) ) {
-
     foreach ($_POST as $postvar => $value) {
 
         if ($value == 'stop') {
@@ -54,11 +51,6 @@ if ( isset($_POST) ) {
         }
     }
 
-}
-
 ?>
 
-<dl>
-    <dt>now playing</dt>
-    <dd><?php echo shell_exec('/usr/bin/mpc current 2>&1'); ?></dd>
-</dl>
+<p><?php echo shell_exec('mpc current'); ?></p>
