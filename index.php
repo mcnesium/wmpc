@@ -5,6 +5,8 @@
 
 <?php
 
+    // config
+    $streamdir = 'streams';
     $streamnames = array(
         'di.fm',
         'radiotunes.com',
@@ -14,7 +16,7 @@
 
     // put available stream playlist files in array
     foreach ($streamnames as $streamname) {
-        $ls[$streamname] = explode( "\n", shell_exec("ls -1 /mnt/crypt/musik/streams/".$streamname ) );
+        $ls[$streamname] = explode( "\n", shell_exec('mpc ls '.$streamdir.'/'.$streamname.' | cut -d "/" -f 3 | sort' ) );
     }
 
 ?>
@@ -45,7 +47,7 @@
         }
         else if ($value != '') {
             // execute shell command to play the selected stream
-            shell_exec('mpc clear && mpc load streams/'.str_replace('_','.',escapeshellarg($postvar)).'/'.escapeshellarg($value).' && mpc play');
+            shell_exec('mpc clear && mpc load '.$streamdir.'/'.str_replace('_','.',escapeshellarg($postvar)).'/'.escapeshellarg($value).' && mpc play');
 
             break;
         }
