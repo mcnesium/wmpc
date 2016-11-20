@@ -7,7 +7,7 @@
 
     // config
     $streamdir = 'streams';
-    $streamnames = array(
+    $streamfamilies = array(
         'di.fm',
         'radiotunes.com',
         'jazzradio.com',
@@ -15,25 +15,26 @@
     );
 
     // put available stream playlist files in array
-    foreach ($streamnames as $streamname) {
-        $ls[$streamname] = explode( "\n", shell_exec('mpc ls '.$streamdir.'/'.$streamname.' | cut -d "/" -f 3 | sort' ) );
+    foreach ($streamfamilies as $streamfamily) {
+        $ls[$streamfamily] = explode( "\n", shell_exec('mpc ls '.$streamdir.'/'.$streamfamily.' | cut -d "/" -f 3 | sort' ) );
     }
 
 ?>
 
 
 <form id="form" action="index.php" method="post" onchange="this.submit()">
-    <?php foreach ($streamnames as $streamname) : ?>
-        <select name="<?php echo $streamname ?>" style="width:100%;height:30px;margin-bottom: 20px;">
-        <option value=""><?php echo $streamname ?></option>
+    <?php foreach ($streamfamilies as $streamfamily) : ?>
+        <select name="<?php echo $streamfamily ?>" style="width:100%;height:30px;margin-bottom: 20px;">
+        <option value=""><?php echo $streamfamily ?></option>
         <?php
             // add option for each playlistfile
-            foreach ($ls[$streamname] as $playlist) {
+            foreach ($ls[$streamfamily] as $playlist) {
                 echo '<option value="'.$playlist.'">'.$playlist.'</option>';
             }
         ?>
         </select>
     <?php endforeach; ?>
+    <button name="nofamily" value="detektorfm.m3u">Detektor FM</button>
     <button name="stop" value="stop">Stop</button>
 </form>
 
@@ -46,8 +47,10 @@
             shell_exec('mpc stop');
         }
         else if ($value != '') {
+            // if stream is from a family, set its subdirectory
+            $streamfamily = ( $postvar == 'nofamily' ) ? '' : str_replace('_','.',escapeshellarg($postvar)).'/';
             // execute shell command to play the selected stream
-            shell_exec('mpc clear && mpc load '.$streamdir.'/'.str_replace('_','.',escapeshellarg($postvar)).'/'.escapeshellarg($value).' && mpc play');
+            shell_exec('mpc clear && mpc load '.$streamdir.'/'.$streamfamily.escapeshellarg($value).' && mpc play');
 
             break;
         }
