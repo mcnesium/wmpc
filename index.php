@@ -11,7 +11,8 @@
         'di.fm',
         'radiotunes.com',
         'jazzradio.com',
-        'rockradio.com'
+        'rockradio.com',
+        'other'
     );
 
     // put available stream playlist files in array
@@ -34,8 +35,6 @@
         ?>
         </select>
     <?php endforeach; ?>
-    <button name="nofamily" value="dlf.m3u">DLF</button>
-    <button name="nofamily" value="detektorfm.m3u">Detektor FM</button>
     <button name="stop" value="stop">Stop</button>
 </form>
 
@@ -48,10 +47,8 @@
             shell_exec('mpc stop');
         }
         else if ($value != '') {
-            // if stream is from a family, set its subdirectory
-            $streamfamily = ( $postvar == 'nofamily' ) ? '' : str_replace('_','.',escapeshellarg($postvar)).'/';
             // execute shell command to play the selected stream
-            shell_exec('mpc clear && mpc load '.$streamdir.'/'.$streamfamily.escapeshellarg($value).' && mpc play');
+            shell_exec('mpc clear && mpc load '.$streamdir.'/'.str_replace('_','.',escapeshellarg($postvar)).'/'.escapeshellarg($value).' && mpc play');
 
             break;
         }
