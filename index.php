@@ -35,7 +35,7 @@
         ?>
         </select>
     <?php endforeach; ?>
-    <button name="stop" value="stop">Stop</button>
+    <button name="stop" value="stop">Stop</button><button onClick="window.location.href;">Reload</button>
 </form>
 
 
