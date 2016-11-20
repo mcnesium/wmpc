@@ -34,6 +34,7 @@
         ?>
         </select>
     <?php endforeach; ?>
+    <button name="nofamily" value="dlf.m3u">DLF</button>
     <button name="nofamily" value="detektorfm.m3u">Detektor FM</button>
     <button name="stop" value="stop">Stop</button>
 </form>
